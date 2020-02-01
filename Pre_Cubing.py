@@ -7,12 +7,12 @@ import pandas
 def load_products_from_csv(file_name):
 	data_frame = pandas.DataFrame(pandas.read_csv(file_name))
 	for row in data_frame.iterrows():
-		# [code, name, length, width, height, standard_qty, FP_qty, haz_class]
-		my_product_array = [str(row[1][0]), str(row[1][1]), row[1][2], row[1][3], row[1][4], row[1][5], row[1][6], str(row[1][7])]
+		# [code, name, length, width, height, standard_qty, FP_qty, despatchable_flag,  haz_class]
+		my_product_array = [str(row[1][0]), str(row[1][1]), row[1][2], row[1][3], row[1][4], row[1][5], row[1][6], str(row[1][7]), str(row[1][8])]
 		create_products_from_csv_QTY(row, my_product_array)
 
 def create_products_from_csv_QTY(row, my_product_array): 
-	product_quantity = row[1][8]
+	product_quantity = row[1][9]
 	product_standard_qty = row[1][5]
 	product_full_pallet_qty = row[1][6]
 	my_product = Pc.Product(*my_product_array)
@@ -63,6 +63,7 @@ def check_hazards_in_group(aproduct, group):
         check_bool = False
 
     return check_bool
+	
    
 # TODO: condition not being met which exludes products from being added to a group     
 # add products into groups upto a limit
