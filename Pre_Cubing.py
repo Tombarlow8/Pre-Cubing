@@ -7,15 +7,15 @@ import pandas
 def load_products_from_csv(file_name):
 	data_frame = pandas.DataFrame(pandas.read_csv(file_name))
 	for row in data_frame.iterrows():
-		# [code, name, length, width, height, standard_qty, FP_qty, despatchable_flag,  haz_class]
-		my_product_array = [str(row[1][0]), str(row[1][1]), row[1][2], row[1][3], row[1][4], row[1][5], row[1][6], str(row[1][7]), str(row[1][8])]
-		create_products_from_csv_QTY(row, my_product_array)
+		# [code, name, length, width, height, standard_qty, FP_qty, despatchable_flag,  haz_class, order_quantity]
+		my_product_array = [str(row[1][0]), str(row[1][1]), row[1][2], row[1][3], row[1][4], row[1][5], row[1][6], str(row[1][7]), str(row[1][8]), row[1][9]]
+		create_products_from_csv_QTY(my_product_array)
 
-def create_products_from_csv_QTY(row, my_product_array): 
-	product_quantity = row[1][9]
-	product_standard_qty = row[1][5]
-	product_full_pallet_qty = row[1][6]
-	my_product = Pc.Product(*my_product_array)
+def create_products_from_csv_QTY(my_product_array): 
+	product_quantity = my_product_array[9]
+	product_standard_qty = my_product_array[5]
+	product_full_pallet_qty = my_product_array[6]
+	my_product = Pc.Product(*my_product_array[:9])
 	
 	number_of_FP = (product_quantity - (product_quantity % product_full_pallet_qty)) // product_full_pallet_qty
 	
@@ -173,7 +173,7 @@ if __name__ == "__main__":
 	box3vol = Bc.P3_box().volume
 	box4vol = Bc.P4_box().volume
 
-	# get the product master data form a csv file and then create the products as 'Product' Objects
+	# get the product master data from a csv file and then create the products as 'Product' Objects
 	load_products_from_csv(product_csv_file)
 	
 	my_groups = group_products_box_groups(our_products)
