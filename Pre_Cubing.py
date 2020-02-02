@@ -5,11 +5,13 @@ import pandas
 
 
 def load_products_from_csv(file_name):
+	product_and_QTY = []
 	data_frame = pandas.DataFrame(pandas.read_csv(file_name))
 	for row in data_frame.iterrows():
 		# [code, name, length, width, height, standard_qty, FP_qty, despatchable_flag,  haz_class, order_quantity]
 		my_product_array = [str(row[1][0]), str(row[1][1]), row[1][2], row[1][3], row[1][4], row[1][5], row[1][6], str(row[1][7]), str(row[1][8]), row[1][9]]
-		create_products_from_csv_QTY(my_product_array)
+		product_and_QTY.append(my_product_array)
+	return product_and_QTY
 
 def create_products_from_csv_QTY(my_product_array): 
 	product_quantity = my_product_array[9]
@@ -174,8 +176,10 @@ if __name__ == "__main__":
 	box4vol = Bc.P4_box().volume
 
 	# get the product master data from a csv file and then create the products as 'Product' Objects
-	load_products_from_csv(product_csv_file)
-	
+	order = load_products_from_csv(product_csv_file)
+	for line in order:
+		create_products_from_csv_QTY(line)
+
 	my_groups = group_products_box_groups(our_products)
 	my_boxes = pack_groups_into_into_boxes(my_groups)
 
