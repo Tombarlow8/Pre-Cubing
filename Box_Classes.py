@@ -26,13 +26,9 @@ class box():
 
     def pack(self, products):
         for product in products:
-            if product.volume + self.fill_volume < self.volume:
-                self.fill_volume += product.volume
-                self.contents.append(product)
-            else:
-                # orphan product for now
-                pass
-
+            self.fill_volume += product.volume
+            self.contents.append(product)
+ 
 
     def show_contents(self):
         for product in self.contents:
