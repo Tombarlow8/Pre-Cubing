@@ -69,17 +69,17 @@ def check_hazards_in_group(aproduct, group):
 
     return check_bool
 
-def every_code_is_haz(group):
-    check_bool = True
-    if len(group) != 0:
-        for product in group:
-            if product.haz_class == "00":
-                check_bool = False
+# TODO: reference a table 
+def every_code_is_same_haz(aproduct, group):
+	haz_to_check = aproduct.haz_class
+	check_bool = True
+	if len(group) != 0:
+		for product in group:
+			if product.haz_class != haz_to_check:
+				check_bool = False
 
-    return check_bool
-	
-   
-# TODO: condition not being met which exludes products from being added to a group     
+	return check_bool
+	    
 # add products into groups upto a limit
 def Create_box_group(current_group, groups_of_products, our_products, product, temp_vol):
 
@@ -95,7 +95,7 @@ def Create_box_group(current_group, groups_of_products, our_products, product, t
 	        temp_vol -= temp_vol
 	        new_group = Bc.box_group()
 	        pack_and_clear(current_group, new_group, groups_of_products)
-	        # there will be a stray product which will need adding # DONE i think
+	        our_products.remove(product)
 	        our_products.append(product)
 	    elif temp_vol < box4vol  and len(our_products) == 1:
 	        temp_vol -= temp_vol
@@ -103,17 +103,24 @@ def Create_box_group(current_group, groups_of_products, our_products, product, t
 	        current_group.append(product)
 	        our_products.remove(product)
 	        pack_and_clear(current_group, new_group, groups_of_products)
-	elif haz_check and temp_vol < box4vol  and len(our_products) != 1 and every_code_is_haz(our_products):
+	elif haz_check and temp_vol < box4vol  and len(our_products) != 1 and every_code_is_same_haz(product, our_products):
 	    temp_vol -= temp_vol
 	    new_group = Bc.box_group()
 	    pack_and_clear(current_group, new_group, groups_of_products)
-	elif haz_check and temp_vol < box4vol  and len(our_products) == 1 and every_code_is_haz(our_products):
+	    our_products.remove(product)
+	    our_products.append(product)
+	elif haz_check and temp_vol < box4vol and every_code_is_same_haz(product, our_products):
 	    temp_vol -= temp_vol
 	    new_group = Bc.box_group()
 	    pack_and_clear(current_group, new_group, groups_of_products)
+	elif haz_check and temp_vol > box4vol  and len(our_products) != 1:
+	    temp_vol -= temp_vol
+	    new_group = Bc.box_group()
+	    pack_and_clear(current_group, new_group, groups_of_products)
+	    our_products.remove(product)    
 	    our_products.append(product)
 	elif haz_check and temp_vol < box4vol  and len(our_products) != 1:
-		temp_vol -= temp_vol
+		temp_vol -= product.volume
 		our_products.remove(product)
 		our_products.append(product)
 	else:
